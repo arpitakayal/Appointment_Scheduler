@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <div class="p-3 mb-2 text-center bg-light text-info border-bottom border-info">
+        <h3>View Schedule</h3>
+    </div>
+
+    <div class="container text-center text-info border-bottom border-info">
+        <div class="text-primary">
+            <label>Select Date: &nbsp;&nbsp;</label>
+            <input type="date" [(ngModel)]="selectedDate" (change)="getAppointments()" />
+        </div>
+        <div class='table-responsive pt-4'>
+            <table class='table custom-table' *ngIf='Appointments && Appointments.length'>
+                <thead>
+                    <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Duration</th>
+                        <th *ngIf="currentUser&&currentUser.Role != 4">NoOfParticipants</th>
+                        <th *ngIf="currentUser&&currentUser.Role != 4">Description</th>
+                        <th *ngIf="currentUser&&currentUser.Role != 4">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let Appointment of Appointments'>
+                        <td data-label="Start Time">{{Appointment.DateTime.toString().split("T")[1]}}</td>
+                        <td data-label="End Time">{{Appointment.EndTime.toString().split(" ")[1]}}</td>
+                        <td data-label="Duration">{{ Appointment.Duration + " mins" }}</td>
+                        <td *ngIf="currentUser&&currentUser.Role != 4" data-label="NoOfParticipants">{{
+                            Appointment.NoOfParticipants }}</td>
+                        <td *ngIf="currentUser&&currentUser.Role != 4" data-label="Description">{{
+                            Appointment.Description }}</td>
+                        <td *ngIf="currentUser&&currentUser.Role != 4" data-label="Status">{{
+                            Appointment.Status&&Appointment.Status ? (Appointment.Status==1) ?
+                            "Approved" :
+                            (Appointment.Status==2) ? "Pending" : "Declined" : "UnKnown"}}</td>
+                        <td *ngIf="currentUser&&currentUser.IsAdmin">
+                            <!-- <button class="btn btn-warning" style="cursor:pointer"  (click)= "editBooking(bookingdtls)" style="margin-right:25px;"> Edit</button> -->
+                            <button class="btn btn-danger" style="cursor:pointer"
+                                (click)="deleteBooking(Appointment._id)">
+                                Cancel</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 class="text-center text-primary" *ngIf='!Appointments.length'>No Appointments Scheduled</h5>
+        </div>
+    </div>
+</div>
